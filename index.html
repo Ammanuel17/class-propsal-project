@@ -3,11 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World</title>
+  <title>Magic 8-Ball</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>Welcome to my Match Maker project!</p>
+  <h1>Magic 8-Ball</h1>
+
+<!-- 8 ball graphic -->
+<div id="eightBall">
+  <div id="innerCircle">
+    <span id="eight">8</span>
+  </div>
+</div>
+
+
+  
+  <p>Choose your question and let fate decide your answer!</p>
+
+    
+  <label for="question">Select a question:</label>
+  <select id="question">
+    <option value="">-- Pick a question --</option>
+    <option value="Will I be successful?">Will I be successful?</option>
+    <option value="Does my crush like me?">Does my crush like me?</option>
+    <option value="Should I study tonight?">Should I study tonight?</option>
+    <option value="Will I get an A on my next test?">Will I get an A on my next test?</option>
+    <option value="Will I become rich?">Will I become rich?</option>
+    <option value="Will tomorrow be my lucky day?">Will tomorrow be my lucky day?</option>
+  </select>
+
+  <br>
+  <button onclick="shakeBall()">Ask the 8-Ball</button>
+
+  <p id="questionDisplay"></p>
+  <p id="answer"></p>
+
+  <script>
+    function shakeBall() {
+      const answers = [
+        "It is certain.",
+        "Yes, definitely.",
+        "Without a doubt.",
+        "Ask again later.",
+        "Cannot predict now.",
+        "Don’t count on it.",
+        "My reply is no.",
+        "Outlook not so good.",
+        "Signs point to yes.",
+        "Very doubtful."
+      ];
+
+      const question = document.getElementById("question").value;
+
+      if (question === "") {
+        document.getElementById("questionDisplay").textContent = " Please select a question first!";
+        document.getElementById("answer").textContent = "";
+        return;
+      }
+
+      document.getElementById("questionDisplay").textContent = "🎱 Question: " + question;
+
+      const randomIndex = Math.floor(Math.random() * answers.length);
+      const response = answers[randomIndex];
+
+      document.getElementById("answer").textContent = " " + response;
+
+      // Add remarks using if / else
+      if (randomIndex < 3) {
+        document.getElementById("answer").textContent += " — Great luck awaits!";
+      } else if (randomIndex < 7) {
+        document.getElementById("answer").textContent += " — The future is unclear.";
+      } else {
+        document.getElementById("answer").textContent += " — Maybe not your best idea!";
+      }
+
+      // log all answers
+      console.log("All possible answers:");
+      for (let i = 0; i < answers.length; i++) {
+        console.log(i + 1 + ":", answers[i]);
+      }
+    }
+  </script>
 </body>
 </html>
-
