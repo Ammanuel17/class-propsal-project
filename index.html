@@ -39,50 +39,55 @@
   <p id="answer"></p>
 
   <script>
-    function shakeBall() {
-      const answers = [
-        "It is certain.",
-        "Yes, definitely.",
-        "Without a doubt.",
-        "Ask again later.",
-        "Cannot predict now.",
-        "Don’t count on it.",
-        "My reply is no.",
-        "Outlook not so good.",
-        "Signs point to yes.",
-        "Very doubtful."
-      ];
+  function shakeBall() {
+    const eight = document.getElementById("eight");
 
-      const question = document.getElementById("question").value;
+    // Reset animation (so it can spin again on next click)
+    eight.classList.remove("spin");
+    void eight.offsetWidth; // triggers reflow to restart animation
+    eight.classList.add("spin");
 
-      if (question === "") {
-        document.getElementById("questionDisplay").textContent = " Please select a question first!";
-        document.getElementById("answer").textContent = "";
-        return;
-      }
+    const answers = [
+      "It is certain.",
+      "Yes, definitely.",
+      "Without a doubt.",
+      "Ask again later.",
+      "Cannot predict now.",
+      "Don’t count on it.",
+      "My reply is no.",
+      "Outlook not so good.",
+      "Signs point to yes.",
+      "Very doubtful."
+    ];
 
-      document.getElementById("questionDisplay").textContent = "🎱 Question: " + question;
+    const question = document.getElementById("question").value;
 
-      const randomIndex = Math.floor(Math.random() * answers.length);
-      const response = answers[randomIndex];
-
-      document.getElementById("answer").textContent = " " + response;
-
-      // Add remarks using if / else
-      if (randomIndex < 3) {
-        document.getElementById("answer").textContent += " — Great luck awaits!";
-      } else if (randomIndex < 7) {
-        document.getElementById("answer").textContent += " — The future is unclear.";
-      } else {
-        document.getElementById("answer").textContent += " — Maybe not your best idea!";
-      }
-
-      // log all answers
-      console.log("All possible answers:");
-      for (let i = 0; i < answers.length; i++) {
-        console.log(i + 1 + ":", answers[i]);
-      }
+    if (question === "") {
+      document.getElementById("questionDisplay").textContent = " Please select a question first!";
+      document.getElementById("answer").textContent = "";
+      return;
     }
-  </script>
+
+    document.getElementById("questionDisplay").textContent = "🎱 Question: " + question;
+
+    const randomIndex = Math.floor(Math.random() * answers.length);
+    const response = answers[randomIndex];
+
+    document.getElementById("answer").textContent = " " + response;
+
+    if (randomIndex < 3) {
+      document.getElementById("answer").textContent += " — Great luck awaits!";
+    } else if (randomIndex < 7) {
+      document.getElementById("answer").textContent += " — The future is unclear.";
+    } else {
+      document.getElementById("answer").textContent += " — Maybe not your best idea!";
+    }
+
+    console.log("All possible answers:");
+    for (let i = 0; i < answers.length; i++) {
+      console.log(i + 1 + ":", answers[i]);
+    }
+  }
+</script>
 </body>
 </html>

@@ -7,7 +7,7 @@ body {
 }
 
 h1 {
-  color: cyan;
+  color: rgb(255, 255, 255);
 }
 
 input {
@@ -22,7 +22,7 @@ button {
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
-  background-color: cyan;
+  background-color: rgb(119, 145, 145);
   color: black;
   cursor: pointer;
   font-weight: bold;
@@ -30,14 +30,14 @@ button {
 }
 
 button:hover {
-  background-color: #00f5d4;
+  background-color: #ff8b07;
   transform: scale(1.05);
 }
 
 #questionDisplay {
   margin-top: 25px;
   font-size: 1.1em;
-  color: #0ef;
+  color: rgb(248, 248, 248);
 }
 
 #answer {
@@ -55,7 +55,7 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 25px rgba(167, 162, 162, 0.2);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
 }
 
 #innerCircle {
@@ -66,6 +66,7 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition
 }
 
 #eight {
@@ -73,4 +74,19 @@ button:hover {
   font-weight: bold;
   color: black;
   font-family: 'Arial Black', Arial, sans-serif;
+}
+
+/* Spin animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}
+
+/* Class added dynamically when the ball spins */
+.spin {
+  animation: spin 1s ease-in-out;
 }
