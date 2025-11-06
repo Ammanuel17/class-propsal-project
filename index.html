@@ -54,7 +54,7 @@
       "Ask again later.",
       "Cannot predict now.",
       "Don’t count on it.",
-      "My reply is no.",
+      "No.",
       "Outlook not so good.",
       "Signs point to yes.",
       "Very doubtful."
@@ -63,12 +63,12 @@
     const question = document.getElementById("question").value;
 
     if (question === "") {
-      document.getElementById("questionDisplay").textContent = " Please select a question first!";
+      document.getElementById("questionDisplay").textContent = " Please select a question first";
       document.getElementById("answer").textContent = "";
       return;
     }
 
-    document.getElementById("questionDisplay").textContent = "🎱 Question: " + question;
+    document.getElementById("questionDisplay`").textContent = "🎱 Question: " + question;
 
     const randomIndex = Math.floor(Math.random() * answers.length);
     const response = answers[randomIndex];
