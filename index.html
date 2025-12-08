@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Magic 8-Ball</title>
   <link rel="stylesheet" href="style.css">
+
+  
+
 </head>
+
+
 <body>
+
+  <div id="ballContainer"></div>
+
   <h1>Magic 8-Ball</h1>
 
 <!-- 8 ball graphic -->
@@ -16,35 +24,52 @@
   </div>
 </div>
 
+<!-- View History Button -->
+<button id="historyBtn">History</button>
+
+<div id="historyPanel">
+  <h2>History</h2>
+  <div id="historyList"></div>
+  <button id="closeHistoryBtn">Close</button>
+</div>
 
   
-  <p>Choose your question and let fate decide your answer!</p>
 
-    
-  <label for="question">Select a question:</label>
-  <select id="question">
-    <option value="">-- Pick a question --</option>
-    <option value="Will I be successful?">Will I be successful?</option>
-    <option value="Does my crush like me?">Does my crush like me?</option>
-    <option value="Should I study tonight?">Should I study tonight?</option>
-    <option value="Will I get an A on my next test?">Will I get an A on my next test?</option>
-    <option value="Will I become rich?">Will I become rich?</option>
-    <option value="Will tomorrow be my lucky day?">Will tomorrow be my lucky day?</option>
-  </select>
+    <label for="question"> Type your question</label>
+    <input type="text" id="question" placeholder="Ask anything...">
 
   <br>
-  <button onclick="shakeBall()">Ask the 8-Ball</button>
+  <button id="askBtn">Ask the 8-Ball</button>
+
 
   <p id="questionDisplay"></p>
   <p id="answer"></p>
+  <button id="resetBtn">Reset</button>
+<button id="shareBtn">Share</button>
 
-  <script>
+
+<script>
+  
+
+ 
+document.addEventListener("DOMContentLoaded", () => {
+
+  let balls = [];
+  let ballIntervals = [];
+  let history = [];
+
   function shakeBall() {
-    const eight = document.getElementById("eight");
+    const eightBall = document.getElementById("eightBall");
 
-    // Reset animation (so it can spin again on next click)
+    // Shake animation
+    eightBall.classList.remove("shake");
+    void eightBall.offsetWidth;
+    eightBall.classList.add("shake");
+
+    // Spin animation
+    const eight = document.getElementById("eight");
     eight.classList.remove("spin");
-    void eight.offsetWidth; // triggers reflow to restart animation
+    void eight.offsetWidth;
     eight.classList.add("spin");
 
     const answers = [
@@ -54,40 +79,150 @@
       "Ask again later.",
       "Cannot predict now.",
       "Don’t count on it.",
-      "No.",
+      "My reply is no.",
       "Outlook not so good.",
       "Signs point to yes.",
       "Very doubtful."
     ];
 
+    const positiveAnswers = [
+      "It is certain.",
+      "Yes, definitely.",
+      "Without a doubt.",
+      "Signs point to yes."
+    ];
+
     const question = document.getElementById("question").value;
 
-    if (question === "") {
-      document.getElementById("questionDisplay").textContent = " Please select a question first";
+    if (!question) {
+      document.getElementById("questionDisplay").textContent = "Please type a question first!";
       document.getElementById("answer").textContent = "";
-      return;
+      return null;
     }
 
-    document.getElementById("questionDisplay`").textContent = "🎱 Question: " + question;
+    const response = answers[Math.floor(Math.random() * answers.length)];
+    document.getElementById("questionDisplay").textContent = "🎱 Question: " + question;
+    document.getElementById("answer").textContent = response;
 
-    const randomIndex = Math.floor(Math.random() * answers.length);
-    const response = answers[randomIndex];
+    if (positiveAnswers.includes(response)) launchConfetti();
 
-    document.getElementById("answer").textContent = " " + response;
+    return response;
+  }
 
-    if (randomIndex < 3) {
-      document.getElementById("answer").textContent += " — Great luck awaits!";
-    } else if (randomIndex < 7) {
-      document.getElementById("answer").textContent += " — The future is unclear.";
-    } else {
-      document.getElementById("answer").textContent += " — Maybe not your best idea!";
-    }
+  function addToHistory(question, answer) {
+    history.push({ question, answer });
+    const historyList = document.getElementById("historyList");
+    const item = document.createElement("div");
+    item.classList.add("history-item");
+    item.innerHTML = `<strong>Q:</strong> ${question} <br> <strong>A:</strong> ${answer}`;
+    historyList.prepend(item);
+  }
 
-    console.log("All possible answers:");
-    for (let i = 0; i < answers.length; i++) {
-      console.log(i + 1 + ":", answers[i]);
+  // Bouncing balls
+  function spawnBouncingBalls() {
+    const container = document.getElementById("ballContainer");
+
+    for (let i = 0; i < 6; i++) {
+      const ball = document.createElement("div");
+      ball.classList.add("bouncing-ball");
+
+      const inner = document.createElement("div");
+      inner.classList.add("inner");
+      inner.textContent = "8";
+      ball.appendChild(inner);
+
+      ball.style.left = Math.random() * (window.innerWidth - 70) + "px";
+      ball.style.top = Math.random() * (window.innerHeight - 70) + "px";
+
+      container.appendChild(ball);
+      balls.push(ball);
+
+      let vx = (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
+      let vy = (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
+
+      const interval = setInterval(() => {
+        let x = parseFloat(ball.style.left);
+        let y = parseFloat(ball.style.top);
+
+        x += vx;
+        y += vy;
+
+        if (x <= 0 || x >= window.innerWidth - 70) vx = -vx;
+        if (y <= 0 || y >= window.innerHeight - 70) vy = -vy;
+
+        ball.style.left = x + "px";
+        ball.style.top = y + "px";
+      }, 10);
+
+      ballIntervals.push(interval);
     }
   }
+
+  function clearBalls() {
+    balls.forEach(ball => ball.remove());
+    balls = [];
+    ballIntervals.forEach(i => clearInterval(i));
+    ballIntervals = [];
+  }
+
+  function launchConfetti() {
+    for (let i = 0; i < 80; i++) {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.animationDuration = 2 + Math.random() * 2 + "s";
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 4000);
+    }
+  }
+
+  // Event listeners
+  document.getElementById("askBtn").addEventListener("click", () => {
+    const question = document.getElementById("question").value;
+    const answer = shakeBall();
+    if (answer) {
+      spawnBouncingBalls();
+      addToHistory(question, answer);
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("question").value = "";
+    document.getElementById("questionDisplay").textContent = "";
+    document.getElementById("answer").textContent = "";
+    document.getElementById("eight").classList.remove("spin");
+    clearBalls();
+  });
+
+  document.getElementById("shareBtn").addEventListener("click", () => {
+    const question = document.getElementById("questionDisplay").textContent;
+    const answer = document.getElementById("answer").textContent;
+    if (!answer) {
+      alert("Ask the 8-Ball a question before sharing!");
+      return;
+    }
+    const shareText = `${question}\n${answer}\n🎱 Magic 8-Ball Prediction`;
+    if (navigator.share) {
+      navigator.share({ title: "Magic 8-Ball Prediction", text: shareText }).catch(err => console.log(err));
+    } else {
+      alert("Your browser doesn't support sharing.");
+    }
+  });
+
+  // History panel toggle
+  const historyBtn = document.getElementById("historyBtn");
+  const closeHistoryBtn = document.getElementById("closeHistoryBtn");
+  const historyPanel = document.getElementById("historyPanel");
+
+  historyBtn.addEventListener("click", () => historyPanel.style.display = "block");
+  closeHistoryBtn.addEventListener("click", () => historyPanel.style.display = "none");
+
+});
+
 </script>
+
+
+
 </body>
 </html>
